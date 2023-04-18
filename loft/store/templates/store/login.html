@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block main %}
+{% if not request.user.is_authenticated %}
+<main class="main">
+    <div class="registeration">
+        <div class="container">
+            <div class="registeration__content">
+                <form class="registeration__form active" action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <h2 class="registeration__title products__title">Вход в аккаунт</h2>
+                    <div class="registeration__form-grid">
+
+                        <div class="input__title">
+                            <h2>Имя аккаунта</h2>
+                            {{ form.username }}
+                        </div>
+                        <div class="input__title">
+                            <h2>Пароль</h2>
+                            {{ form.password }}
+                        </div>
+                    </div>
+
+                    <div class="registeration__btns">
+
+                        <button class="btn registeration__btn" type="submit">Войти</button>
+                        <a href="{% url 'registration' %}"
+                           style="font-size:12px; color: rgb(133, 131, 131); margin-left:100px;">Нет аккаунта? </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% else %}
+<p style="height: 100px;">Вы уже авторизованы</p>
+{% endif %}
+{% endblock main %}

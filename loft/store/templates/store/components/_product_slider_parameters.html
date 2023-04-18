@@ -1,0 +1,34 @@
+{% load static %}
+<div class="product__slider-parameters">
+    <div class="product__raiting">
+        <div class="product__raiting-body">
+            <div class="product__raiting-active"></div>
+            <div class="product__raiting-items">
+                <input type="radio" name="raiting" value="1" class="product__raiting-links">
+                <input type="radio" name="raiting" value="2" class="product__raiting-links">
+                <input type="radio" name="raiting" value="3" class="product__raiting-links">
+                <input type="radio" name="raiting" value="4" class="product__raiting-links">
+                <input type="radio" name="raiting" value="5" class="product__raiting-links">
+            </div>
+        </div>
+        <div class="product__raiting-value">{{ topic_product.rating }}</div>
+    </div>
+    <h1 class="product__title">{{ topic_product.title }}</h1>
+    <span class="product__categories">{{ topic_product.category }}</span>
+    <div class="product__links">
+        <h2 class="product__links-price"><span>{{ topic_product.price }}</span> $</h2>
+        {% if topic_product.quantity_in_storage <= 0 %}
+        <a href="" class="product__links-buy">Отсутсвует</a>
+        {% else %}
+        <a href="#!" class="product__links-buy">Купить</a>
+        {% endif %}
+        <a href="#!" class="products__item-heart product__links-add">
+            <span>Добавить в желаемое</span></a>
+    </div>
+        {% include 'store/components/_parameter_list.html' %}
+
+    <p class="product__descr">
+        <span class="product__descr-title">Описание</span>
+        {{ topic_product.description }}
+    </p>
+</div>

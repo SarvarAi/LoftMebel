@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block main %}
+{% if not request.user.is_authenticated %}
+<main class="main">
+    <div class="registeration">
+        <div class="container">
+            <div class="registeration__content">
+                <form class="registeration__form active" action="{% url 'registrate_user' %}" method="post">
+                    {% csrf_token %}
+                    <h2 class="registeration__title products__title">Регистрация</h2>
+                    <div class="registeration__form-grid">
+
+                        <div class="input__title">
+                            <h2>Имя</h2>
+                            {{ registration_form.first_name }}
+                        </div>
+                        <div class="input__title">
+                            <h2>Фамилия</h2>
+                            {{ registration_form.last_name }}
+                        </div>
+                        <div class="input__title">
+                            <h2>E-mail</h2>
+                            {{ registration_form.email }}
+                        </div>
+
+                        <div class="input__title">
+                            <h2>Придумайте имя аккаунта</h2>
+                            {{ registration_form.username }}
+                        </div>
+
+                        <div class="input__title">
+                            <h2>Придумайте пароль</h2>
+                            {{ registration_form.password1 }}
+                        </div>
+                        <div class="input__title">
+                            <h2>Подтвердить пароль</h2>
+                            {{ registration_form.password2 }}
+                        </div>
+
+                    </div>
+
+                    <div class="registeration__btns">
+
+                        <button class="btn registeration__btn" type="submit">Зарегистрироваться</button>
+                        <a href="{% url 'login_page' %}" style="font-size:12px; color: rgb(133, 131, 131);">Уже есть аккаунт? </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% else %}
+<p style="height: 100px;">Вы уже авторизованы</p>
+{% endif %}
+{% endblock main %}

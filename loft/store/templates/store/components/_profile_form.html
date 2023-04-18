@@ -1,0 +1,28 @@
+<form method="POST" action="" class="profile__form">
+    <h2 class="profile__title">Личные данные</h2>
+    <div class="profile__form-grid">
+        {% csrf_token %}
+
+        <div class="input__title">
+            <h2>Имя</h2>
+            {{ form.first_name }}
+        </div>
+        <div class="input__title">
+            <h2>Фамилия</h2>
+            {{ form.last_name }}
+        </div>
+        <div class="input__title">
+            <h2>Название аккаунта</h2>
+            {{ form.username }}
+        </div>
+        <div class="input__title">
+            <h2>E-mail</h2>
+            {{ form.email }}
+        </div>
+        <a href="{% url 'change_password' %}" style="font-size:12px; color: rgb(1, 120, 83);">Изменить пароль</a>
+        <a href="{% url 'logout' %}" style="font-size:12px; color: rgb(1, 120, 83);">Выйти из аккаунта</a>
+    </div>
+    <button class="btn profile__btn">Изменить</button>
+
+
+</form>

@@ -1,0 +1,8 @@
+<div class="sliderLines">
+    {% for image in topic_product.images.all %}
+    <div class="product__slider-item active">
+        <img src="{{ image.image.url }}" alt="banner" width="300px" height="300px"
+             class="product__slider-img">
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,22 @@
+{% load static %}
+<ul class="nav__list">
+    <li>
+        <a href="{% url 'home' %}" class="nav__list-links">
+            <img src="{% static 'store/image/home.svg' %}" alt="home">
+            Главная
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'about' %}" class="nav__list-links">
+            <img src="{% static 'store/image/aboute.svg' %}" alt="aboute">
+            О нас
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'contact_us' %}" class="nav__list-links">
+            <img src="{% static 'store/image/contacts.svg' %}" alt="contacts">
+            Контакты
+        </a>
+    </li>
+</ul>
+<!-- /.nav__list -->

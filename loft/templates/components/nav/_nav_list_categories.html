@@ -1,0 +1,18 @@
+{% load store_tags %}
+{% get_categories as categories %}
+<ul class="nav__list _categories">
+    <li>
+        <h2 class="nav__title nav__title-categories">Категории</h2>
+    </li>
+    {% for category in categories %}
+    <li>
+        <a href="{{ category.get_absolute_url }}" class="nav__list-links">
+            {% if category.svg_mobile %}
+            <img src="{{ category.svg_mobile.url }}" alt="icons">
+            {% endif %}
+            {{ category.title }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+<!-- /.nav__catigories -->

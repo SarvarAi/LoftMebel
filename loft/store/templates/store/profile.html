@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block main %}
+<main class="main">
+    <div class="profile">
+        <div class="container">
+            <div class="profile__content">
+                {% include 'store/components/_profile_form.html' %}
+                {% include 'store/components/_profile_orders.html' %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock main %}

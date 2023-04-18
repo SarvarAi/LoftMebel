@@ -1,0 +1,68 @@
+<section class="products">
+
+    {% if 'category' not in request.path %}
+    {% if 'search' in request.path %}
+    {% if products|length %}
+    <h2 class="products__title">Результат по поиску: {{ search_word }}</h2>
+    {% else %}
+    <h2 class="products__title">По вашему запросу "{{ search_word }}" ничего не найдено :(</h2>
+    {% endif %}
+    {% else %}
+    <h2 class="products__title">Хиты продаж</h2>
+    {% endif %}
+    {% else %}
+    <h2 class="products__title">Категория: {{ title }}</h2>
+    {% endif %}
+
+    <div class="products__content">
+
+        <!-- /.products__item -->
+        {% for product in products %}
+        <div class="products__item">
+            <a href="#" class="products__item-heart">
+
+            </a>
+
+            <a href="{% url 'product' product.slug %}"> <img src="{{ product.get_first_image }}" alt=""
+                                           class="products__item-img" width="100px" height="100px"></a>
+            <div class="products__item-text">
+                <h3 class="products__item-title">{{ product.title }}</h3>
+                <div class="products__item-desrc">{{ product.category }}</div>
+                <div class="products__item-price">{{ product.price }}$</div>
+            </div>
+            <!-- /.products__item-text -->
+            <div class="products__item-options products__options">
+                <h4 class="products__options-title">Размеры</h4>
+                <ul class="products__options-list options__list">
+                    <li class="options__list-item">
+                        <p class="options__list-text">
+                            ШИРИНА
+                        </p>
+                        <span class="size">{{ product.width }} СМ</span>
+                    </li>
+                    <li class="options__list-item">
+                        <p class="options__list-text">
+                            ГЛУБИНА
+                        </p>
+                        <span class="size">{{ product.depth }} СМ</span>
+                    </li>
+                    <li class="options__list-item">
+                        <p class="options__list-text">
+                            ВЫСОТА
+                        </p>
+                        <span class="size">{{ product.height }} СМ</span>
+                    </li>
+                </ul>
+                {% if product.quantity_in_storage == 0 %}
+                <a href="{% url 'product' product.slug %}" class="options__btn btn">Нет в наличии</a>
+                {% else %}
+                    <a href="{% url 'product' product.slug %}" class="options__btn btn">Купить</a>
+                {% endif %}
+            </div>
+            <!-- /.products__options -->
+        </div>
+        {% endfor %}
+
+    </div>
+    <!-- /.products__content -->
+</section>

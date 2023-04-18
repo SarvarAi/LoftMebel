@@ -1,0 +1,23 @@
+{% load static %}
+<div class="product__slider-panel">
+
+
+    <ul class="product__slider-indicators">
+        {% for image in topic_product.images.all %}
+        <li>
+            <a href="#!" class="indicators__links active">
+                <img src="{{ image.image.url }}" alt="products" width="100px" height="100px">
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="product__slider-btns">
+        <button class="btn__next">
+            <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow">
+        </button>
+        <button class="btn__prev">
+            <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow">
+        </button>
+    </div>
+</div>

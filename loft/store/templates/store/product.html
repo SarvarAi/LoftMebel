@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block main %}
+<div class="product__slider">
+    <div class="product__slider-content">
+
+        {% include 'store/components/_product_slider_lines.html' %}
+        {% include 'store/components/_product_slider_panel.html' %}
+
+    </div>
+        {% include 'store/components/_product_slider_parameters.html' %}
+</div>
+
+<div class="container">
+
+    {% include 'store/components/product_card.html' %}
+    <!-- /.products -->
+</div>
+{% endblock main %}

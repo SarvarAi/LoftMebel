@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <!-- Css - Стили -->
+    {% include 'components/_css.html' %}
+    {% include 'components/_fonts.html' %}
+</head>
+
+<body>
+
+
+<nav class="nav">
+    <div class="container _nav">
+        <div class="nav__content">
+            {% include 'components/nav/_nav_content_bars.html' %}
+            {% include 'components/nav/_nav_list.html' %}
+            {% include 'components/nav/_nav_contacts.html' %}
+
+        </div>
+        <!-- /.nav__content -->
+    </div>
+    <!-- /.container -->
+    {% include 'components/nav/_nav_list_categories.html' %}
+</nav>
+<!-- /.nav -->
+
+<div class="wrapper">
+
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                {% include 'components/header/_header_bar.html' %}
+                {% include 'components/header/_header_list.html' %}
+
+                {% include 'components/_messages.html' %}
+
+                {% block slider %}
+                {% include 'components/_slider.html' %}
+                {% endblock slider %}
+            </div>
+            <!-- /.header__content -->
+        </div>
+        <!-- /.container -->
+    </header>
+
+    {% block main %}
+    {% endblock main %}
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                {% include 'components/footer/_footer_navigate.html' %}
+                {% include 'components/footer/_footer_social.html' %}
+            </div>
+            <!-- /.footer__content -->
+        </div>
+        <!-- /.container -->
+    </footer>
+    <!-- /.footer -->
+</div>
+<!-- /.wrapper -->
+
+<script src="{% static 'store/js/script.js' %}"></script>
+<script src="{% static 'store/js/slider.js' %}"></script>
+<!-- Js - скрипты -->
+</body>
+
+</html>

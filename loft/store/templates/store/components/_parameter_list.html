@@ -1,0 +1,34 @@
+{% load static %}
+<ul class="paremeters__list">
+        <li class="paremetes__list-item">
+            <h3 class="paremeters__list-title">Цвет</h3>
+            <a href="#!" class="paremeters__list-btn">
+                <div class="paremeters__color"></div>
+                <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
+            </a>
+            <div class="list__drop">
+                <ul>
+                    <li style="margin-top:5px;"><a href=""><div class="paremeters__color"></div></a></li>
+                    <li style="margin-top:5px;"><div class="paremeters__color"></div></li>
+                    <li style="margin-top:5px;"><div class="paremeters__color"></div></li>
+                </ul>
+            </div>
+        </li>
+        <li class="paremetes__list-item">
+            <h3 class="paremeters__list-title">Количество</h3>
+            <a href="#!" class="paremeters__list-btn">
+                <div class="paremeters__count"><span>1</span></div>
+                <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
+            </a>
+            <div class="list__drop"></div>
+
+        </li>
+        <li class="paremetes__list-item">
+            <h3 class="paremeters__list-title">Размер (Д × Ш × В)</h3>
+            <a href="#!" class="paremeters__list-btn">
+                <div class="paremeters__size">218 СМ × 95 СМ × 90 СМ</div>
+                <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
+            </a>
+            <div class="list__drop"></div>
+        </li>
+    </ul>

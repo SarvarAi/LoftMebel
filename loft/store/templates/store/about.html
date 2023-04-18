@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block main %}
+<main class="main">
+    <section class="info__section">
+        <div class="info__section-bg"></div>
+        <div class="container">
+            <div class="info__section-content">
+                <div class="info__section-txt">
+                    <h2 class="info__section-subtitle">О магазине</h2>
+                    <h1 class="info__section-title">
+                        Интернет-магазин «Лофт Мебель»:
+                        купите хорошую
+                        мебель в один клик!
+                    </h1>
+                    <p class="info__section-descr">
+                        Уникальный формат интернет-магазина позволит вам купить лучшую
+                        мебель крупнейших российских фабрик максимально быстро и по
+                        выгодной цене!
+                        <span>
+                                    Мы благодарим за доверие более десятка производителей, которые дали
+                                    нам возможность представлять лучшие образцы их продукции в
+                                    российском интернет-пространстве. Прямые договоры на поставку
+                                    мебели с фабрик обеспечивают наиболее привлекательные условия для
+                                    наших покупателей
+                                </span>
+                    </p>
+                </div>
+                <div class="info__section-banner">
+                    <img src="{% static 'store/image/aboute.png' %}" alt="aboute">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.info__section -->
+    {% include 'store/components/_about_sentence_content.html' %}
+
+    <!-- /.sentence -->
+    {% include 'store/components/_about_offers_content.html' %}
+
+    <!-- /.sentence -->
+    {% include 'store/components/_about_cards_content.html' %}
+
+    <!-- /about__cards -->
+    {% include 'store/components/_about_saving_content.html' %}
+
+    <!-- /.saving -->
+</main>
+{% endblock main %}

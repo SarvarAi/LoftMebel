@@ -1,0 +1,50 @@
+{% load static %}
+<div class="header__bar">
+    <a href="#!" class="nav__bars-open">
+        <span class="burger"></span>
+        <span class="burger"></span>
+        <span class="burger"></span>
+    </a>
+
+    <a href="{% url 'home' %}" class="logo">
+        <img src="{% static 'store/icons/LOGO.svg' %}" alt="logo">
+    </a>
+
+    <form class="header__search" role="search" method="get" action="{% url 'search' %}">
+        <button type="submit" style="border: 0; background:none;"><i class="fal fa-search"></i></button>
+        <input name="search" type="search" class="header__search-txt" placeholder="Поиск" aria-label="Поиск">
+    </form>
+
+    <ul class="header__list">
+        <li>
+            <a href="./registration.html" class="header__list-item _truck">
+                <i class="far fa-truck"></i>
+                Доставка
+            </a>
+        </li>
+        <li>
+            <a href="./favorites.html" class="header__list-item" id="_heart">
+
+            </a>
+        </li>
+        <li>
+            <a href="./basket.html" class="header__list-item" id="_bag">
+
+            </a>
+        </li>
+        <li>
+            {% if request.user.is_authenticated %}
+                {% if 'profile' in request.path %}
+                <a href="./profile.html" class="header__list-item active" id="_profile">
+                </a>
+                {% else %}
+                <a href="{% url 'profile' %}" class="header__list-item" id="_profile">
+                </a>
+                {% endif %}
+            {% else %}
+            <a href="{% url 'registration' %}" class="header__list-item" id="_profile">
+            </a>
+            {% endif %}
+        </li>
+    </ul>
+</div>
