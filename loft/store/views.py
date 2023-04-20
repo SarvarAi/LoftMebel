@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
 
-from .models import Category, Product
+from .models import Category, Product, FavoriteProducts
 from .forms import ContactUserForm, RegistrationForm, LoginForm, EditAccountForm, \
     EditPasswordForm
 
@@ -46,7 +46,6 @@ class CategoryView(ListView):
     def get_queryset(self, **kwargs):
         slug = self.kwargs['slug']
         products = Product.objects.filter(category__slug=slug)
-        print(products)
         return products
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -60,13 +59,55 @@ class CategoryView(ListView):
 
 def product(request, slug):
     topic_product = Product.objects.get(slug=slug)
+    user = request.user
+    favorite_products = [i.product for i in user.favorite_products.all()]
+
+    if topic_product in favorite_products:
+        is_favorite = True
+    else:
+        is_favorite = False
+
     products = Product.objects.all()
     context = {
         'topic_product': topic_product,
         'products': products,
+        'title': f'Продукт: {topic_product.title}',
+        'is_favorite': is_favorite
+    }
+    return render(request, 'store/product.html', context=context)
+
+
+def product_color(request, product_slug, color_slug):
+    topic_product = Product.objects.get(slug=product_slug)
+    topic_color = topic_product.colors.get(slug=color_slug)
+    products = Product.objects.all()
+    context = {
+        'topic_product': topic_product,
+        'products': products,
+        'topic_color': topic_color,
         'title': f'Продукт: {topic_product.title}'
     }
     return render(request, 'store/product.html', context=context)
+
+
+def add_favorite_product(request, product_slug):
+    if request.user.is_authenticated:
+        user = request.user
+        _product = Product.objects.get(slug=product_slug)
+        if _product in [i.product for i in user.favorite_products.all()]:
+            fav_product = FavoriteProducts.objects.get(user=user, product=_product)
+            fav_product.delete()
+            messages.error(request, 'Продукт удален из избранного')
+
+        else:
+            FavoriteProducts.objects.create(user=user, product=_product)
+            messages.success(request, 'Продукт успешно добавлен в избранное')
+
+        next_page = request.META.get('HTTP_REFERER', 'home')
+        return redirect(next_page)
+    else:
+        messages.warning(request, 'Войдите или зарегистрируйтесь что бы добавить в Избранное')
+        return redirect('registration')
 
 
 class AboutView(TemplateView):
@@ -199,3 +240,16 @@ def changing_password(request):
             for field in form.errors:
                 messages.error(request, form.errors[field].as_text())
         return redirect('profile')
+
+
+def favorites(request):
+    if request.user.is_authenticated:
+        user = request.user
+        favorite_products = [i.product for i in user.favorite_products.all()]
+        context = {
+            'title': 'Избранное',
+            'products': favorite_products
+        }
+        return render(request, 'store/favorites.html', context=context)
+    else:
+        redirect('registration')

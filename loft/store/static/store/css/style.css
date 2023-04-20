@@ -388,6 +388,7 @@
     line-height: 19px;
     color: #414141;
     margin-bottom: 35px;
+    margin-top: 35px;
 }
 
 .products__content {
@@ -460,7 +461,7 @@
 
 .products__item-heart {
     position: absolute;
-    top: 21px;
+   2 top: 21px;
     right: 15px;
     display: flex;
     padding: 10px;
@@ -819,7 +820,7 @@
 .paremeters__count {
     width: 30px;
     height: 30px;
-    background: red;
+    background: green;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.07);
 }
 

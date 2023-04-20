@@ -4,7 +4,15 @@
 {% block main %}
 <main class="main">
     <div class="container">
-
+        {% if 'search' in request.path %}
+            {% if products|length %}
+            <h2 class="products__title">Результат по поиску: {{ search_word }}</h2>
+            {% else %}
+            <h2 class="products__title">По вашему запросу "{{ search_word }}" ничего не найдено :(</h2>
+            {% endif %}
+        {% else %}
+        <h2 class="products__title">Хиты продаж</h2>
+        {% endif %}
         {% include 'store/components/product_card.html' %}
         <!-- /.products -->
     </div>

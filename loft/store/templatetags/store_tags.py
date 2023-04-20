@@ -1,5 +1,5 @@
 from django import template
-from store.models import Category
+from store.models import Category, FavoriteProducts
 
 register = template.Library()
 
@@ -27,3 +27,10 @@ def get_footer_categories():
         footer_subcategories.append(category)
 
     return footer_categories
+
+
+@register.simple_tag()
+def get_favorite_products(user):
+    fav = FavoriteProducts.objects.filter(user=user)
+    products = [i.product for i in fav]
+    return products

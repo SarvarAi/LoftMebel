@@ -5,7 +5,8 @@ from django.urls import path
 
 from .views import HomeView, SearchHomeView, CategoryView, AboutView, contact_us, \
     registrate_user, saving_user_contacts, registration, product, user_login, login_page, \
-    profile_page, user_logout, changing_password, change_password_page
+    profile_page, user_logout, changing_password, change_password_page, product_color, \
+    add_favorite_product, favorites
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -23,4 +24,7 @@ urlpatterns = [
     path('logout/', user_logout, name='logout'),
     path('change-password/', change_password_page, name='change_password'),
     path('changing-password/', changing_password, name='changing_password'),
+    path('product/<slug:product_slug>/<slug:color_slug>', product_color, name='product_color'),
+    path('add_favorite_product/<slug:product_slug>', add_favorite_product, name='add_favorite_product'),
+    path('favorites/', favorites, name='favorites')
 ]

@@ -23,9 +23,13 @@
             </a>
         </li>
         <li>
-            <a href="./favorites.html" class="header__list-item" id="_heart">
-
+            {% if 'favorites' in request.path %}
+            <a href="{% url 'favorites' %}" class="header__list-item active" id="_heart">
             </a>
+            {% else %}
+            <a href="{% url 'favorites' %}" class="header__list-item" id="_heart">
+            </a>
+            {% endif %}
         </li>
         <li>
             <a href="./basket.html" class="header__list-item" id="_bag">

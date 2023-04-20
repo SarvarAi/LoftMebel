@@ -1,34 +1,53 @@
 {% load static %}
 <ul class="paremeters__list">
-        <li class="paremetes__list-item">
-            <h3 class="paremeters__list-title">Цвет</h3>
-            <a href="#!" class="paremeters__list-btn">
-                <div class="paremeters__color"></div>
-                <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
-            </a>
-            <div class="list__drop">
-                <ul>
-                    <li style="margin-top:5px;"><a href=""><div class="paremeters__color"></div></a></li>
-                    <li style="margin-top:5px;"><div class="paremeters__color"></div></li>
-                    <li style="margin-top:5px;"><div class="paremeters__color"></div></li>
-                </ul>
-            </div>
-        </li>
-        <li class="paremetes__list-item">
-            <h3 class="paremeters__list-title">Количество</h3>
-            <a href="#!" class="paremeters__list-btn">
-                <div class="paremeters__count"><span>1</span></div>
-                <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
-            </a>
-            <div class="list__drop"></div>
-
-        </li>
-        <li class="paremetes__list-item">
-            <h3 class="paremeters__list-title">Размер (Д × Ш × В)</h3>
-            <a href="#!" class="paremeters__list-btn">
-                <div class="paremeters__size">218 СМ × 95 СМ × 90 СМ</div>
-                <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
-            </a>
-            <div class="list__drop"></div>
-        </li>
-    </ul>
+    <li class="paremetes__list-item">
+        <h3 class="paremeters__list-title">Цвет</h3>
+        {% if not topic_color %}
+        <a href="#!" class="paremeters__list-btn">
+            <div style="width: 30px;
+                                height: 30px;
+                                background: {{ topic_product.get_first_color.color_code }};
+                                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.07);"></div>
+            <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
+        </a>
+        <div class="list__drop">
+            <ul>
+                {% for color_parameters in topic_product.colors.all %}
+                <li style="margin-top:5px;"><a href="{% url 'product_color' topic_product.slug color_parameters.slug %}">
+                    <div style="width: 30px;
+                                height: 30px;
+                                background: {{ color_parameters.color_code }};
+                                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.07);"></div>
+                </a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <a href="#!" class="paremeters__list-btn">
+            <div style="width: 30px;
+                                height: 30px;
+                                background: {{ topic_color.color_code }};
+                                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.07);"></div>
+            <img src="{% static 'store/image/arrow-black.svg' %}" alt="arrow-down">
+        </a>
+        <div class="list__drop">
+            <ul>
+                {% for color_parameters in topic_product.colors.all %}
+                <li style="margin-top:5px;"><a href="{% url 'product_color' topic_product.slug color_parameters.slug %}">
+                    <div style="width: 30px;
+                                height: 30px;
+                                background: {{ color_parameters.color_code }};
+                                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.07);"></div>
+                </a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </li>
+    <li>
+        <h3 class="paremeters__list-title">Размер (Д × Ш × В)</h3>
+        <div class="paremeters__size">{{ topic_product.depth }} СМ × {{ topic_product.width }} СМ × {{ topic_product.height }} СМ
+        </div>
+        <div class="list__drop"></div>
+    </li>
+</ul>

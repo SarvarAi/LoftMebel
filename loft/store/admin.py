@@ -1,9 +1,16 @@
 from django.contrib import admin
-from .models import Category, Product, Gallery, ContactUser
+from .models import Category, Product, Gallery, ContactUser, AvailableColors, \
+    FavoriteProducts
 from django.utils.safestring import mark_safe
 
 
 # Register your models here.
+class AvailableColorsInline(admin.TabularInline):
+    fk_name = 'product'
+    model = AvailableColors
+    extra = 1
+    prepopulated_fields = {'slug': ('color_name',), }
+
 
 class GalleryInline(admin.TabularInline):
     fk_name = 'Product'
@@ -24,7 +31,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display_links = ('title', 'category')
     list_editable = ('quantity_in_storage',)
     prepopulated_fields = {'slug': ('title',), }
-    inlines = [GalleryInline]
+    inlines = [GalleryInline, AvailableColorsInline]
 
     def get_photo(self, obj):
         if obj.images:
@@ -42,3 +49,9 @@ class ProductAdmin(admin.ModelAdmin):
 class ContactUserAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'text')
     list_display_links = ('name',)
+
+
+@admin.register(FavoriteProducts)
+class FavoriteProductsAdmin(admin.ModelAdmin):
+    list_display = ('user', 'product')
+    list_display_links = ('user',)

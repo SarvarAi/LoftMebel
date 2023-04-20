@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block slider %}
 {% endblock slider %}
@@ -6,10 +7,7 @@
 {% block main %}
 <main class="main">
     <div class="container">
-        <h2 class="products__title">Категория: {{ title }}</h2>
         {% include 'store/components/product_card.html' %}
-        <!-- /.products -->
     </div>
-    <!-- /.container -->
 </main>
 {% endblock main %}

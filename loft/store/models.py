@@ -1,23 +1,24 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 # Create your models here.
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=255, verbose_name='Category')
-    svg = models.FileField(null=True, blank=True, upload_to='category/', verbose_name='Image svg')
+    title = models.CharField(max_length=255, verbose_name='Категория')
+    svg = models.FileField(null=True, blank=True, upload_to='category/', verbose_name='Картина svg')
     svg_mobile = models.FileField(null=True, blank=True, upload_to='category/mobile_svg',
-                                  verbose_name='Image mobile svg')
-    slug = models.SlugField(verbose_name='Slug', unique=True, null=True)
+                                  verbose_name='Картнина мобильной версии svg')
+    slug = models.SlugField(verbose_name='Слаг', unique=True, null=True)
 
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
     def get_absolute_url(self):
         return reverse('category', kwargs={'slug': self.slug})
@@ -40,8 +41,8 @@ class Product(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = 'Product'
-        verbose_name_plural = 'Products'
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
 
     def get_absolute_url(self):
         return reverse('product', kwargs={'slug': self.slug})
@@ -56,10 +57,16 @@ class Product(models.Model):
         else:
             return error_image
 
+    def get_first_color(self):
+        return self.colors.first()
+
 
 class Gallery(models.Model):
     Product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Product', related_name='images')
     image = models.ImageField(upload_to='gallery/', verbose_name='Image')
+
+    def __str__(self):
+        return 'Галерея'
 
     class Meta:
         verbose_name = 'Gallery'
@@ -76,15 +83,60 @@ class ContactUser(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'User Contact'
-        verbose_name_plural = 'User Contacts'
-
-# class Client(models.Model):
-#     name = models.CharField(max_length=255, verbose_name='Name')
-#     surname = models.CharField(maxlength=255, verbose_name='Surname')
-#     email = models.EmailField(max_length=255, verbose_name='Email')
-#     telephone_number = models.CharField(max_length=255, verbose_name='Phone number')
-#     password = models.CharField(max_length=255, verbose_name='Password')
-#
+        verbose_name = 'Контакт пользователя'
+        verbose_name_plural = 'Котакты пользователей'
 
 
+class AvailableColors(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='colors')
+    color_name = models.CharField(max_length=255, verbose_name='Цвет')
+    color_code = models.CharField(max_length=255, verbose_name='Код цвета')
+    slug = models.SlugField(verbose_name='Slug', null=True)
+
+    def __str__(self):
+        return self.color_name
+
+    class Meta:
+        verbose_name = 'Цвет'
+        verbose_name_plural = 'Цвета'
+
+
+class FavoriteProducts(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_products',
+                             verbose_name='Пользователь')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Избранный товар')
+
+    def __str__(self):
+        return self.product.title
+
+    class Meta:
+        verbose_name = 'Избранный товар'
+        verbose_name_plural = 'Избранные товары'
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата добаления заказа')
+    is_completed = models.BooleanField(default=False, verbose_name='Закончен ли заказ')
+    shipping = models.BooleanField(default=False, verbose_name='Опция доставки')
+
+    def __str__(self):
+        return self.user
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+
+
+class OrderProduct(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    quantity = models.IntegerField(default=0, verbose_name='Количество')
+    added_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления продукта')
+
+    def get_total_quantity(self):
+        return self.product.price * self.quantity
+
+    class Meta:
+        verbose_name = 'Заказанный продукт'
+        verbose_name_plural = 'Заказанные продукты'
