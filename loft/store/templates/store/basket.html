@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block main %}
+<main class="main">
+    <div class="container">
+        <section class="basket">
+            <div class="basket__text">
+                <h1 class="basket__title">Ваша корзина</h1>
+                <span class="basket__count"><span>{{ cart_total_quantity }}</span> предмета</span>
+            </div>
+            <div class="basket__items">
+                {% include 'store/components/_basket_item.html' %}
+
+            </div>
+            <form class="products__form">
+                <span>Итоговая стоимость:<span class="products__form-price">{{ cart_total_price }}$</span> </span>
+                <button class="btn products__form-btn">Оформить заказ</button>
+            </form>
+        </section>
+        <!-- /.basket -->
+
+        {% include 'store/components/product_card.html' %}
+        <!-- /.products -->
+
+    </div>
+    <!-- /.container -->
+</main>
+{% endblock main %}

@@ -121,7 +121,19 @@ class Order(models.Model):
     shipping = models.BooleanField(default=False, verbose_name='Опция доставки')
 
     def __str__(self):
-        return self.user
+        return str(self.pk) + ' '
+
+    @property
+    def get_cart_total_quantity(self):
+        order_products = self.orderproduct_set.all()
+        total_quantity = sum([product.quantity for product in order_products])
+        return total_quantity
+
+    @property
+    def get_cart_total_price(self):
+        order_products = self.orderproduct_set.all()
+        total_price = sum([product.get_total_price for product in order_products])
+        return total_price
 
     class Meta:
         verbose_name = 'Заказ'
@@ -132,9 +144,28 @@ class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
     quantity = models.IntegerField(default=0, verbose_name='Количество')
+    color_title = models.CharField(max_length=255, verbose_name='Цвет')
     added_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления продукта')
 
-    def get_total_quantity(self):
+    def __str__(self):
+        return self.product.title
+
+    def get_color_code(self):
+        colors = self.product.colors.all()
+        for color in colors:
+            if color.slug == self.color_title:
+                return color.color_code
+        return 'red'
+
+    def get_color_name(self):
+        colors = self.product.colors.all()
+        for color in colors:
+            if color.slug == self.color_title:
+                return color.color_name
+        return 'Ошибка'
+
+    @property
+    def get_total_price(self):
         return self.product.price * self.quantity
 
     class Meta:

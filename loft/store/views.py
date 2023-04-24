@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .models import Category, Product, FavoriteProducts
 from .forms import ContactUserForm, RegistrationForm, LoginForm, EditAccountForm, \
     EditPasswordForm
+from .utils import CartForAuthenticatedUser
 
 
 # Create your views here.
@@ -59,21 +60,24 @@ class CategoryView(ListView):
 
 def product(request, slug):
     topic_product = Product.objects.get(slug=slug)
-    user = request.user
-    favorite_products = [i.product for i in user.favorite_products.all()]
-
-    if topic_product in favorite_products:
-        is_favorite = True
-    else:
-        is_favorite = False
-
     products = Product.objects.all()
     context = {
         'topic_product': topic_product,
         'products': products,
-        'title': f'Продукт: {topic_product.title}',
-        'is_favorite': is_favorite
+        'title': f'Продукт: {topic_product.title}'
     }
+
+    if request.user.is_authenticated:
+        user = request.user
+        favorite_products = [i.product for i in user.favorite_products.all()]
+
+        if topic_product in favorite_products:
+            is_favorite = True
+        else:
+            is_favorite = False
+
+        context['is_favorite'] = is_favorite
+
     return render(request, 'store/product.html', context=context)
 
 
@@ -252,4 +256,38 @@ def favorites(request):
         }
         return render(request, 'store/favorites.html', context=context)
     else:
+        redirect('registration')
+
+
+def get_cart_information(request):
+    if request.user.is_authenticated:
+        cart = CartForAuthenticatedUser(request=request)
+        context = cart.get_cart_info()
+        favorite_products = [i.product for i in request.user.favorite_products.all()]
+        context['title'] = 'Ваша корзина'
+        context['products'] = favorite_products
+
+        return render(request, 'store/basket.html', context=context)
+    else:
+        return redirect('registration')
+
+
+def edit_profile_account(request):
+    if request.method == 'POST':
+        form = EditAccountForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+        else:
+            for field in form.errors:
+                messages.error(request, form.errors[field].as_text())
+    return redirect('profile')
+
+
+def cart_operation(request, order_product_slug, order_product_color, action):
+    if request.user.is_authenticated:
+        user_cart = CartForAuthenticatedUser(request, order_product_slug, order_product_color, action)
+        next_page = request.META.get('HTTP_REFERER', 'home')
+        return redirect(next_page)
+    else:
+        messages.error(request, 'Авторизуйтесь или зарегистрируйтесь')
         redirect('registration')

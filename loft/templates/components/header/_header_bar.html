@@ -32,19 +32,18 @@
             {% endif %}
         </li>
         <li>
-            <a href="./basket.html" class="header__list-item" id="_bag">
-
+            <a href="{% url 'get_cart_information' %}" class="header__list-item" id="_bag">
             </a>
         </li>
         <li>
             {% if request.user.is_authenticated %}
-                {% if 'profile' in request.path %}
-                <a href="./profile.html" class="header__list-item active" id="_profile">
-                </a>
-                {% else %}
-                <a href="{% url 'profile' %}" class="header__list-item" id="_profile">
-                </a>
-                {% endif %}
+            {% if 'profile' in request.path %}
+            <a href="./profile.html" class="header__list-item active" id="_profile">
+            </a>
+            {% else %}
+            <a href="{% url 'profile' %}" class="header__list-item" id="_profile">
+            </a>
+            {% endif %}
             {% else %}
             <a href="{% url 'registration' %}" class="header__list-item" id="_profile">
             </a>

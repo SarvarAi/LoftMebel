@@ -1,0 +1,35 @@
+{% for order_product in order_products %}
+<div class="basket__item">
+    <a href="#!" class="basket__item-img">
+        <img src="{{ order_product.product.get_first_image }}" alt="product">
+    </a>
+    <div class="basket__item-content">
+        <div class="basket__item-text">
+            <h2 class="basket__item-title">{{ order_product.product.title }}</h2>
+            <p class="basket__item-price">
+                <span class="price"><span>{{ order_product.product.price }}</span>$</span>
+
+            </p>
+        </div>
+        <div class="basket__options">
+            <p class="basket__options-color">
+                Цвет:
+                <span class="color__name">{{ order_product.get_color_name }}</span>
+                <span style="
+    width: 14px;
+    height: 14px;
+    background: {{ order_product.get_color_code }};"></span>
+            </p>
+            <p class="basket__options-count">
+                Количество: <span>{{ order_product.quantity }}</span>
+            </p>
+            <p class="basket__options-size">
+                Размер(Ш×Д×В): <span>{{ order_product.product.depth }} СМ × {{ order_product.product.width }} СМ × {{ order_product.product.height }} СМ</span>
+            </p>
+        </div>
+    </div>
+    <a href="#!" class="basket__delete">
+        <i class="fas fa-times"></i>
+    </a>
+</div>
+{% endfor %}

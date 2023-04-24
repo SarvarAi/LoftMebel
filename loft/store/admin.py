@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, Gallery, ContactUser, AvailableColors, \
-    FavoriteProducts
+    FavoriteProducts, Order, OrderProduct
 from django.utils.safestring import mark_safe
 
 
@@ -55,3 +55,15 @@ class ContactUserAdmin(admin.ModelAdmin):
 class FavoriteProductsAdmin(admin.ModelAdmin):
     list_display = ('user', 'product')
     list_display_links = ('user',)
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'created_at', 'is_completed', 'shipping')
+    list_display_links = ('user',)
+
+
+@admin.register(OrderProduct)
+class OrderProductAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity', 'added_at')
+    list_display_links = ('order',)

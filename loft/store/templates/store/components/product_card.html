@@ -27,7 +27,7 @@
             </a>
             {% endif %}
 
-            <a href="{% url 'product' product.slug %}"> <img src="{{ product.get_first_image }}" alt=""
+            <a href="{% url 'product' product.slug  %}"> <img src="{{ product.get_first_image }}" alt=""
                                                              class="products__item-img" width="100px"
                                                              height="100px"></a>
             <div class="products__item-text">
@@ -61,7 +61,7 @@
                 {% if product.quantity_in_storage == 0 %}
                 <a href="{% url 'product' product.slug %}" class="options__btn btn">Нет в наличии</a>
                 {% else %}
-                <a href="{% url 'product' product.slug %}" class="options__btn btn">Купить</a>
+                <a href="{% url 'product' product.slug %}" class="options__btn btn">Подробнее</a>
                 {% endif %}
             </div>
             <!-- /.products__options -->

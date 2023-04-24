@@ -744,13 +744,12 @@
 .product__links-buy {
     display: flex;
     width: max-content;
-    padding: 12px 50px 13px;
+    padding:10px;
     transition: color .3s linear, background .3s linear;
     font-size: 13px;
     line-height: 15px;
 
     color: #FFFFFF;
-    text-transform: capitalize;
     background: var(--mainColor);
     border: 1px solid var(--mainColor);
 }
@@ -1203,12 +1202,6 @@ button.btns__loadfile:hover {
 
 .basket__options span {
     color: #9E9E9E;
-}
-
-.color__block {
-    width: 14px;
-    height: 14px;
-    background: #AF527E;
 }
 
 .basket__delete {
