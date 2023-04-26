@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from random import randint
 
 
 # Create your models here.
@@ -59,6 +60,11 @@ class Product(models.Model):
 
     def get_first_color(self):
         return self.colors.first()
+
+    def get_first_color_slug(self):
+        if not self.colors.first():
+            return 'black'
+        return self.colors.first().slug
 
 
 class Gallery(models.Model):
@@ -120,6 +126,7 @@ class Order(models.Model):
     is_completed = models.BooleanField(default=False, verbose_name='Закончен ли заказ')
     shipping = models.BooleanField(default=False, verbose_name='Опция доставки')
 
+
     def __str__(self):
         return str(self.pk) + ' '
 
@@ -171,3 +178,32 @@ class OrderProduct(models.Model):
     class Meta:
         verbose_name = 'Заказанный продукт'
         verbose_name_plural = 'Заказанные продукты'
+
+
+class City(models.Model):
+    city = models.CharField(max_length=255, verbose_name='Город доставки')
+
+    def __str__(self):
+        return self.city
+
+    class Meta:
+        verbose_name = 'Город'
+        verbose_name_plural = 'Города'
+
+
+class ShippingAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', verbose_name='Пользователь')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order', verbose_name='Заказ')
+    city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name='Город доставки')
+    address = models.CharField(max_length=255, verbose_name='Адресс доставки')
+    phone = models.CharField(max_length=255, verbose_name='Номер телефона')
+    created_at = models.DateTimeField(auto_now_add=True)
+    apartment_number = models.IntegerField(verbose_name='Номер аппартамента')
+
+    def __str__(self):
+        return self.user
+
+    class Meta:
+        verbose_name = 'Доставка'
+        verbose_name_plural = 'Доставки'
+

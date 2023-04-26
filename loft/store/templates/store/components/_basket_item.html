@@ -1,3 +1,4 @@
+{% load static %}
 {% for order_product in order_products %}
 <div class="basket__item">
     <a href="#!" class="basket__item-img">
@@ -7,7 +8,7 @@
         <div class="basket__item-text">
             <h2 class="basket__item-title">{{ order_product.product.title }}</h2>
             <p class="basket__item-price">
-                <span class="price"><span>{{ order_product.product.price }}</span>$</span>
+                <span class="price"><span>{{ order_product.get_total_price }}</span>$</span>
 
             </p>
         </div>
@@ -21,14 +22,24 @@
     background: {{ order_product.get_color_code }};"></span>
             </p>
             <p class="basket__options-count">
-                Количество: <span>{{ order_product.quantity }}</span>
-            </p>
+                Количество: <span>{{ order_product.quantity }}</span> <div class="quantity">
+                <a href="{% url 'cart_operation' order_product.product.slug order_product.color_title 'add' %}">
+                    <img data-product="id" data-action="add" class="quantity-btn update-cart" width="10px" height="10px"
+                         src="{% static 'store/image/arrow-up.png' %}" alt="">
+                </a>
+                <a href="{% url 'cart_operation' order_product.product.slug order_product.color_title 'delete' %}">
+                    <img data-product="id" data-action="remove" class="quantity-btn update-cart" width="10px" height="10px"
+                         src="{% static 'store/image/arrow-down.png' %}" alt="">
+                </a>
+            </div>
+
             <p class="basket__options-size">
                 Размер(Ш×Д×В): <span>{{ order_product.product.depth }} СМ × {{ order_product.product.width }} СМ × {{ order_product.product.height }} СМ</span>
             </p>
         </div>
     </div>
-    <a href="#!" class="basket__delete">
+    <a href="{% url  'delete_order_product' order_product.product.slug order_product.color_title   %}"
+       class="basket__delete">
         <i class="fas fa-times"></i>
     </a>
 </div>

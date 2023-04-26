@@ -3,11 +3,14 @@ from django.views.generic import TemplateView, ListView
 from django.contrib import messages
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
+from django.urls import reverse
+import stripe
 
 from .models import Category, Product, FavoriteProducts
 from .forms import ContactUserForm, RegistrationForm, LoginForm, EditAccountForm, \
-    EditPasswordForm
+    EditPasswordForm, ShippingAddressForm
 from .utils import CartForAuthenticatedUser
+from loft import settings
 
 
 # Create your views here.
@@ -58,12 +61,14 @@ class CategoryView(ListView):
         return context
 
 
-def product(request, slug):
+def product(request, slug, color_slug):
     topic_product = Product.objects.get(slug=slug)
     products = Product.objects.all()
+    topic_color = topic_product.colors.get(slug=color_slug)
     context = {
         'topic_product': topic_product,
         'products': products,
+        'topic_color': topic_color,
         'title': f'Продукт: {topic_product.title}'
     }
 
@@ -157,6 +162,7 @@ def saving_user_contacts(request):
         form = ContactUserForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Мы получили ваше сообщения, мы ответим вам в течении 1 дня')
             return redirect('home')
 
     return redirect('home')
@@ -256,7 +262,7 @@ def favorites(request):
         }
         return render(request, 'store/favorites.html', context=context)
     else:
-        redirect('registration')
+        return redirect('registration')
 
 
 def get_cart_information(request):
@@ -291,3 +297,65 @@ def cart_operation(request, order_product_slug, order_product_color, action):
     else:
         messages.error(request, 'Авторизуйтесь или зарегистрируйтесь')
         redirect('registration')
+
+
+def delete_order_product(request, order_product_slug, order_product_color):
+    user_cart = CartForAuthenticatedUser(request, order_product_slug, order_product_color)
+    next_page = request.META.get('HTTP_REFERER', 'home')
+    return redirect(next_page)
+
+
+def checkout(request):
+    if request.method == 'POST':
+        form = ShippingAddressForm
+        cart = CartForAuthenticatedUser(request=request)
+        context = cart.get_cart_info()
+
+        context['form'] = form
+        context['title'] = 'Оформление заказа'
+        return render(request, 'store/checkout.html', context=context)
+    else:
+        return redirect('home')
+
+
+def create_checkout_session(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    if request.method == 'POST':
+        user_cart = CartForAuthenticatedUser(request=request).get_cart_info()
+        shipping_form = ShippingAddressForm(request.POST)
+
+        if shipping_form.is_valid:
+            address = shipping_form.save(commit=False)
+            address.user = request.user
+            address.order = user_cart['order']
+            address.save()
+
+            total_price = user_cart['cart_total_price']
+            session = stripe.checkout.Session.create(
+                line_items=[{
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': 'Товары с LoftMebel'
+                        },
+                        'unit_amount': int(total_price * 100)
+                    },
+                    'quantity': 1
+                }],
+                mode='payment',
+                success_url=request.build_absolute_uri(reverse('success')),
+                cancel_url=request.build_absolute_uri(reverse('checkout'))
+            )
+            return redirect(session.url, 303)
+
+        else:
+            for field in shipping_form.errors:
+                messages.error(request, shipping_form.errors[field].as_text())
+            return redirect('get_cart_information')
+
+
+def success_payment(request):
+    user_cart = CartForAuthenticatedUser(request)
+    user_cart.clear()
+    messages.success(request, 'Оплата прошла успешно')
+    return render(request, 'store/success.html')

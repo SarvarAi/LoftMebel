@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, Gallery, ContactUser, AvailableColors, \
-    FavoriteProducts, Order, OrderProduct
+    FavoriteProducts, Order, OrderProduct, City, ShippingAddress
 from django.utils.safestring import mark_safe
 
 
@@ -67,3 +67,15 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderProductAdmin(admin.ModelAdmin):
     list_display = ('order', 'product', 'quantity', 'added_at')
     list_display_links = ('order',)
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ('city',)
+    list_display_links = ('city',)
+
+
+@admin.register(ShippingAddress)
+class ShippingAddressAdmin(admin.ModelAdmin):
+    list_display = ('user', 'order', 'city', 'phone')
+    list_display_links = ('user', 'order')

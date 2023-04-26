@@ -7,6 +7,8 @@ class CartForAuthenticatedUser:
 
         if product_slug and product_color and action:
             self.add_or_delete(product_slug=product_slug, product_color=product_color, action=action)
+        elif product_slug and product_color:
+            self.delete_product(product_slug=product_slug, product_color=product_color)
 
     def get_cart_info(self):
         order = Order.objects.get(user=self.user, is_completed=False)
@@ -38,3 +40,16 @@ class CartForAuthenticatedUser:
 
         if order_product.quantity <= 0:
             order_product.delete()
+
+    def clear(self):
+        order = self.get_cart_info()['order']
+        order_products = order.orderproduct_set.all()
+        for product in order_products:
+            product.delete()
+        order.save()
+
+    def delete_product(self, product_slug, product_color):
+        order = self.get_cart_info()['order']
+        order_product = order.orderproduct_set.get(product__slug=product_slug, color_title=product_color)
+        order_product.delete()
+        order.save()

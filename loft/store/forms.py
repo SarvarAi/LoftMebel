@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
-from .models import ContactUser
+from .models import ContactUser, ShippingAddress, City
 
 
 class ContactUserForm(forms.ModelForm):
@@ -122,3 +122,31 @@ class EditPasswordForm(UserChangeForm):
                   'new_password',
                   'confirm_new_password')
 
+
+class ShippingAddressForm(forms.ModelForm):
+    city = forms.ModelChoiceField(queryset=City.objects.all(), empty_label='Выберите город', widget=forms.Select(attrs={
+        'class': 'contact__section-input',
+        'placeholder': 'Ваш город'
+    }))
+
+    class Meta:
+        model = ShippingAddress
+        fields = (
+            'city',
+            'address',
+            'phone',
+            'apartment_number')
+        widgets = {
+            'address': forms.TextInput(attrs={
+                'class': 'contact__section-input',
+                'placeholder': 'Ваш адрес'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'contact__section-input',
+                'placeholder': 'Ваш номер телефона'
+            }),
+            'apartment_number': forms.NumberInput(attrs={
+                'class': 'contact__section-input',
+                'placeholder': 'Номер аппартамента'
+            })
+        }

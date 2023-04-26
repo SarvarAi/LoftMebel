@@ -1,0 +1,48 @@
+<form action="{% url 'create_checkout_session' %}" method="POST" class="profile__form">
+    {% csrf_token %}
+    <h2 class="profile__title">Личные данные</h2>
+    <div class="profile__form-grid">
+
+        <div class="input__title">
+            <h2>Имя</h2>
+            <div class="contact__section-input">{{ request.user.first_name }}</div>
+        </div>
+        <div class="input__title">
+            <h2>Фамилия</h2>
+             <div class="contact__section-input">{{ request.user.last_name }}</div>
+        </div>
+        <div class="input__title">
+            <h2>Название аккаунта</h2>
+            <div class="contact__section-input">{{ request.user.username }}</div>
+        </div>
+        <div class="input__title">
+            <h2>E-mail</h2>
+            <div class="contact__section-input">{{ request.user.email }}</div>
+        </div>
+    </div>
+    <a href="{% url 'profile' %}" style="margin-top: 5px;font-size:12px; color: rgb(1, 120, 83);">Изменить данные аккаунта</a>
+
+    <h2 class="profile__title" style="margin-top: 20px;">Адрес доставки</h2>
+
+    <div class="profile__form-grid">
+        <div class="input__title">
+            <h2>Город</h2>
+            {{ form.city }}
+        </div>
+        <div></div>
+        <div class="input__title _span-two">
+            <h2>Район и улица</h2>
+            {{ form.address }}
+        </div>
+        <div class="input__title">
+            <h2>Номер квартиры или участка</h2>
+            {{ form.apartment_number }}
+        </div>
+        <div class="input__title">
+            <h2>Номер телефона</h2>
+            {{ form.phone }}
+        </div>
+    </div>
+    <button class="btn profile__btn" type="submit">Подтвердить</button>
+
+</form>

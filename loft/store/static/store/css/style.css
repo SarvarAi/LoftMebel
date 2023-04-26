@@ -2572,3 +2572,18 @@ button.btns__loadfile:hover {
         align-items: center;
     }
 }
+
+
+.quantity {
+    display: inline-block;
+	font-weight: 700;
+	padding-right:1px;
+}
+
+.quantity-btn {
+    width: 12px;
+	cursor: pointer;
+	display: block;
+	margin-top: 2px;
+	transition:.1s;
+}

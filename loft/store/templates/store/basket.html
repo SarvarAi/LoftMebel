@@ -16,9 +16,10 @@
                 {% include 'store/components/_basket_item.html' %}
 
             </div>
-            <form class="products__form">
+            <form action="{% url 'checkout' %}" method="POST" class="products__form">
+                {% csrf_token %}
                 <span>Итоговая стоимость:<span class="products__form-price">{{ cart_total_price }}$</span> </span>
-                <button class="btn products__form-btn">Оформить заказ</button>
+                <button type="submit" class="btn products__form-btn">Оформить заказ</button>
             </form>
         </section>
         <!-- /.basket -->

@@ -3,10 +3,7 @@ import profile
 from django.contrib.auth import logout
 from django.urls import path
 
-from .views import HomeView, SearchHomeView, CategoryView, AboutView, contact_us, \
-    registrate_user, saving_user_contacts, registration, product, user_login, login_page, \
-    profile_page, user_logout, changing_password, change_password_page, product_color, \
-    add_favorite_product, favorites, get_cart_information, edit_profile_account
+from .views import *
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -17,7 +14,7 @@ urlpatterns = [
     path('category/<slug:slug>/', CategoryView.as_view(), name='category'),
     path('register/', registration, name='registration'),
     path('registrate_user/', registrate_user, name='registrate_user'),
-    path('product/<slug:slug>', product, name='product'),
+    path('product/<slug:slug>/<str:color_slug>/', product, name='product'),
     path('login/', user_login, name='login'),
     path('login-page/', login_page, name='login_page'),
     path('profile/', profile_page, name='profile'),
@@ -27,6 +24,13 @@ urlpatterns = [
     path('product/<slug:product_slug>/<slug:color_slug>', product_color, name='product_color'),
     path('add_favorite_product/<slug:product_slug>', add_favorite_product, name='add_favorite_product'),
     path('favorites/', favorites, name='favorites'),
-    path('cart', get_cart_information, name='get_cart_information'),
+    path('cart/', get_cart_information, name='get_cart_information'),
     path('edit_profile_account/', edit_profile_account, name='edit_profile_account'),
+    path('cart_operation/<slug:order_product_slug>/<str:order_product_color>/<str:action>/', cart_operation,
+         name='cart_operation'),
+    path('delete_order_product/<slug:order_product_slug>/<str:order_product_color>/', delete_order_product,
+         name='delete_order_product'),
+    path('checkout/', checkout, name='checkout'),
+    path('create_checkout_session/', create_checkout_session, name='create_checkout_session'),
+    path('success/', success_payment, name='success')
 ]
