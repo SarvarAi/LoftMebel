@@ -1,3 +1,4 @@
+{% load static %}
 <div class="profile__orders">
     <h2 class="profile__title">Мои заказы</h2>
 
@@ -5,57 +6,36 @@
         <tr>
             <td colspan="4">Товар</td>
             <td>Цена</td>
-            <td>Дата</td>
-            <td>Статус</td>
-        </tr>
+            <td>Номер Заказа</td>
+            <td>Количество</td>
+            <tr>
+            {% if history %}
+        {% for h in history %}
         <tr>
             <td colspan="4" class="profile__title-adaptive">
                 <div class="tabel__item">
-                    <img src="./assets/images/main/products/1.png" alt="img">
-                    <span>Кускен Navy
-                                                Blue</span>
+                    <img src="{{ h.product.get_first_image }}" alt="img">
+                    <span>{{ h.product.title }}</span>
                 </div>
             </td>
-            <td class="profile__tabel-data">16990</td>
-            <td class="profile__tabel-data">01.05.2020</td>
-            <td class="profile__tabel-data">Ожидается</td>
+            <td class="profile__tabel-data">{{ h.price }}</td>
+            <td class="profile__tabel-data">{{ h.order_number }}</td>
+            <td class="profile__tabel-data">{{ h.quantity }}</td>
         </tr>
+        {% endfor %}
+        {% else %}
         <tr>
             <td colspan="4" class="profile__title-adaptive">
                 <div class="tabel__item">
-                    <img src="./assets/images/main/products/2.png" alt="img">
-                    <span>Кускен Navy
-                                                Blue</span>
+                    <span>N/A</span>
                 </div>
             </td>
-            <td class="profile__tabel-data">28490</td>
-            <td class="profile__tabel-data">01.05.2020</td>
-            <td class="profile__tabel-data">Оплачено 50%</td>
+            <td class="profile__tabel-data">N/A</td>
+            <td class="profile__tabel-data">N/A</td>
+            <td class="profile__tabel-data">N/A</td>
         </tr>
-        <tr>
-            <td colspan="4" class="profile__title-adaptive">
-                <div class="tabel__item">
-                    <img src="./assets/images/main/products/3.png" alt="img">
-                    <span>Кускен Navy
-                                                Blue</span>
-                </div>
-            </td>
-            <td class="profile__tabel-data">21990</td>
-            <td class="profile__tabel-data">01.05.2020</td>
-            <td class="profile__tabel-data">Доставлено</td>
-        </tr>
-        <tr>
-            <td colspan="4" class="profile__title-adaptive">
-                <div class="tabel__item">
-                    <img src="./assets/images/main/products/4.png" alt="img">
-                    <span>Кускен Navy
-                                                Blue</span>
-                </div>
-            </td>
-            <td class="profile__tabel-data">21990</td>
-            <td class="profile__tabel-data">01.05.2020</td>
-            <td class="profile__tabel-data">Отменен</td>
-        </tr>
+        {% endif %}
+
 
         <!-- Не трогать - это заглушка для корректного отображения таблицы -->
         <tr>

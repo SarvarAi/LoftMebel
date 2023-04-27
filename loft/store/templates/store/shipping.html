@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block slider %}
+{% endblock slider %}
+
+{% block main %}
+<main class="main">
+    <div class="registeration">
+        <div class="container">
+            <div class="registeration__content">
+                <form class="registeration__form active" action="{% url 'saving_shipping_address' %}" method="post">
+                    {% csrf_token %}
+                    <h2 class="registeration__title products__title">Адрес доставки</h2>
+                    <div class="registeration__form-grid">
+
+                        <div class="input__title">
+                            <h2>Город</h2>
+                            {{ form.city }}
+                        </div>
+                        <div class="input__title">
+                            <h2>Адрес</h2>
+                            {{ form.address }}
+                        </div>
+                        <div class="input__title">
+                            <h2>Номер Квартиры/Участка</h2>
+                            {{ form.apartment_number }}
+                        </div>
+                         <div class="input__title">
+                            <h2>Номер телефона</h2>
+                            {{ form.phone }}
+                        </div>
+                    </div>
+
+                    <div class="registeration__btns">
+
+                        <button class="btn registeration__btn" type="submit">Сохранить</button>
+                        <a href="{% url 'home' %}"
+                           style="font-size:12px; color: rgb(1, 120, 83);; margin-left:100px;">Назад</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock main %}

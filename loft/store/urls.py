@@ -32,5 +32,7 @@ urlpatterns = [
          name='delete_order_product'),
     path('checkout/', checkout, name='checkout'),
     path('create_checkout_session/', create_checkout_session, name='create_checkout_session'),
-    path('success/', success_payment, name='success')
+    path('success/', success_payment, name='success'),
+    path('shipping-address/', ShippingView.as_view(), name='shipping-address'),
+    path('saving-shipping-address/', saving_shipping_address, name='saving_shipping_address'),
 ]

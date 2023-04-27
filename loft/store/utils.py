@@ -1,4 +1,4 @@
-from .models import Order, Product
+from .models import Order, Product, HistoryProducts
 
 
 class CartForAuthenticatedUser:
@@ -11,7 +11,7 @@ class CartForAuthenticatedUser:
             self.delete_product(product_slug=product_slug, product_color=product_color)
 
     def get_cart_info(self):
-        order = Order.objects.get(user=self.user, is_completed=False)
+        order, _ = Order.objects.get_or_create(user=self.user, is_completed=False)
         products = order.orderproduct_set.all()
         cart_total_quantity = order.get_cart_total_quantity
         cart_total_price = order.get_cart_total_price
@@ -44,8 +44,14 @@ class CartForAuthenticatedUser:
     def clear(self):
         order = self.get_cart_info()['order']
         order_products = order.orderproduct_set.all()
-        for product in order_products:
-            product.delete()
+        for order_product in order_products:
+            history = HistoryProducts.objects.create(user=self.user)
+            history.product = order_product.product
+            history.order_number = order_product.order.pk
+            history.price = order_product.get_total_price
+            history.quantity = order_product.quantity
+            history.save()
+            order_product.delete()
         order.save()
 
     def delete_product(self, product_slug, product_color):

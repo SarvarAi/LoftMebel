@@ -126,7 +126,6 @@ class Order(models.Model):
     is_completed = models.BooleanField(default=False, verbose_name='Закончен ли заказ')
     shipping = models.BooleanField(default=False, verbose_name='Опция доставки')
 
-
     def __str__(self):
         return str(self.pk) + ' '
 
@@ -193,7 +192,7 @@ class City(models.Model):
 
 class ShippingAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', verbose_name='Пользователь')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order', verbose_name='Заказ')
+    order = models.ForeignKey(Order, null=True, on_delete=models.CASCADE, related_name='order', verbose_name='Заказ')
     city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name='Город доставки')
     address = models.CharField(max_length=255, verbose_name='Адресс доставки')
     phone = models.CharField(max_length=255, verbose_name='Номер телефона')
@@ -201,9 +200,39 @@ class ShippingAddress(models.Model):
     apartment_number = models.IntegerField(verbose_name='Номер аппартамента')
 
     def __str__(self):
-        return self.user
+        return self.user.username
 
     class Meta:
         verbose_name = 'Доставка'
         verbose_name_plural = 'Доставки'
 
+
+class HistoryProducts(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    product = models.ForeignKey(Product, null=True, on_delete=models.CASCADE, verbose_name='Продукт')
+    order_number = models.IntegerField(default=0, null=True, verbose_name='Номер заказа')
+    price = models.DecimalField(max_digits=12, decimal_places=2, null=True, verbose_name='Цена')
+    quantity = models.IntegerField(default=0, verbose_name='Количество')
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = 'Купленый продукт'
+        verbose_name_plural = 'Купленые продукты'
+
+
+class ShippingAddressPermanent(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name='Город доставки')
+    address = models.CharField(max_length=255, verbose_name='Адресс доставки')
+    phone = models.CharField(max_length=255, verbose_name='Номер телефона')
+    created_at = models.DateTimeField(auto_now_add=True)
+    apartment_number = models.IntegerField(verbose_name='Номер аппартамента')
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        verbose_name = 'Адрес постоянной доставки'
+        verbose_name_plural = 'Адрес постоянных доставок'

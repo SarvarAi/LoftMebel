@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 import stripe
 
-from .models import Category, Product, FavoriteProducts
+from .models import Category, Product, FavoriteProducts, HistoryProducts
 from .forms import ContactUserForm, RegistrationForm, LoginForm, EditAccountForm, \
-    EditPasswordForm, ShippingAddressForm
+    EditPasswordForm, ShippingAddressForm, ShippingAddressPermanentForm, ShippingAddressPermanent
 from .utils import CartForAuthenticatedUser
 from loft import settings
 
@@ -214,6 +214,11 @@ def profile_page(request):
         'title': 'Профиль',
         'form': form
     }
+    history = HistoryProducts.objects.filter(user=request.user)
+
+    if history:
+        context['history'] = history
+
     return render(request, 'store/profile.html', context=context)
 
 
@@ -296,7 +301,7 @@ def cart_operation(request, order_product_slug, order_product_color, action):
         return redirect(next_page)
     else:
         messages.error(request, 'Авторизуйтесь или зарегистрируйтесь')
-        redirect('registration')
+        return redirect('registration')
 
 
 def delete_order_product(request, order_product_slug, order_product_color):
@@ -307,13 +312,25 @@ def delete_order_product(request, order_product_slug, order_product_color):
 
 def checkout(request):
     if request.method == 'POST':
-        form = ShippingAddressForm
-        cart = CartForAuthenticatedUser(request=request)
-        context = cart.get_cart_info()
-
-        context['form'] = form
-        context['title'] = 'Оформление заказа'
-        return render(request, 'store/checkout.html', context=context)
+        address = None
+        try:
+            address = ShippingAddressPermanent.objects.get(user=request.user)
+        except:
+            pass
+        if address:
+            form = ShippingAddressForm(instance=address)
+            cart = CartForAuthenticatedUser(request=request)
+            context = cart.get_cart_info()
+            context['form'] = form
+            context['title'] = 'Оформление заказа'
+            return render(request, 'store/checkout.html', context=context)
+        else:
+            form = ShippingAddressForm
+            cart = CartForAuthenticatedUser(request=request)
+            context = cart.get_cart_info()
+            context['form'] = form
+            context['title'] = 'Оформление заказа'
+            return render(request, 'store/checkout.html', context=context)
     else:
         return redirect('home')
 
@@ -359,3 +376,51 @@ def success_payment(request):
     user_cart.clear()
     messages.success(request, 'Оплата прошла успешно')
     return render(request, 'store/success.html')
+
+
+class ShippingView(TemplateView):
+    template_name = 'store/shipping.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        address = None
+        try:
+            address = ShippingAddressPermanent.objects.get(user=self.request.user)
+        except:
+            pass
+        if address:
+            context['form'] = ShippingAddressPermanentForm(instance=address)
+        else:
+            context['form'] = ShippingAddressPermanentForm()
+        context['title'] = 'Адрес доставки'
+        return context
+
+
+def saving_shipping_address(request):
+    if request.method == 'POST':
+        form = ShippingAddressPermanentForm(data=request.POST)
+        if form.is_valid():
+            last_address = None
+            try:
+                last_address = ShippingAddressPermanent.objects.get(user=request.user)
+            except:
+                pass
+            if last_address:
+                last_address.delete()
+                address = form.save(commit=False)
+                address.user = request.user
+                address.save()
+                messages.success(request, 'Адрес доставки успешно изменен')
+                return redirect('home')
+            else:
+                address = form.save(commit=False)
+                address.user = request.user
+                address.save()
+                messages.success(request, 'Адрес доставки успешно сохранен')
+                return redirect('home')
+        else:
+            for field in form.errors:
+                messages.error(request, form.errors[field].as_text())
+            return redirect('shipping-address')
+    else:
+        return redirect('home')

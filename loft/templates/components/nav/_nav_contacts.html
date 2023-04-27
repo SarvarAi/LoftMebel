@@ -6,10 +6,17 @@
         </a>
     </li>
     <li>
-        <a href="./registration.html" class="nav__contacts-links">
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'shipping-address' %}" class="nav__contacts-links">
             <i class="far fa-truck"></i>
             Доставка
         </a>
+        {% else %}
+        <a href="{% url 'registration' %}" class="nav__contacts-links">
+            <i class="far fa-truck"></i>
+            Доставка
+        </a>
+        {% endif %}
     </li>
 </ul>
 <!-- /.nav__contacts -->
