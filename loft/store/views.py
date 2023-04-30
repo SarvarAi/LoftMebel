@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, View
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
 from django.contrib import messages
 from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.urls import reverse_lazy
 import stripe
 
 from .models import Category, Product, FavoriteProducts, HistoryProducts
@@ -61,42 +65,42 @@ class CategoryView(ListView):
         return context
 
 
-def product(request, slug, color_slug):
-    topic_product = Product.objects.get(slug=slug)
-    products = Product.objects.all()
-    topic_color = topic_product.colors.get(slug=color_slug)
-    context = {
-        'topic_product': topic_product,
-        'products': products,
-        'topic_color': topic_color,
-        'title': f'Продукт: {topic_product.title}'
-    }
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'store/product.html'
 
-    if request.user.is_authenticated:
-        user = request.user
-        favorite_products = [i.product for i in user.favorite_products.all()]
+    def is_favorite_product(self, topic_product):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            favorite_products = [i.product for i in user.favorite_products.all()]
+            if topic_product in favorite_products:
+                return True
+        return False
 
-        if topic_product in favorite_products:
-            is_favorite = True
-        else:
-            is_favorite = False
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        topic_product = Product.objects.get(slug=self.kwargs['slug'])
+        products = Product.objects.all()
+        topic_color = topic_product.colors.get(slug=self.kwargs['color_slug'])
 
-        context['is_favorite'] = is_favorite
+        context['topic_product'] = topic_product
+        context['products'] = products
+        context['topic_color'] = topic_color
+        context['title'] = f'Продукт: {topic_product.title}'
 
-    return render(request, 'store/product.html', context=context)
+        if self.is_favorite_product(topic_product=topic_product):
+            context['is_favorite'] = True
+
+        return context
 
 
-def product_color(request, product_slug, color_slug):
-    topic_product = Product.objects.get(slug=product_slug)
-    topic_color = topic_product.colors.get(slug=color_slug)
-    products = Product.objects.all()
-    context = {
-        'topic_product': topic_product,
-        'products': products,
-        'topic_color': topic_color,
-        'title': f'Продукт: {topic_product.title}'
-    }
-    return render(request, 'store/product.html', context=context)
+class AboutView(TemplateView):
+    template_name = 'store/about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['title'] = 'О нас'
+        return context
 
 
 def add_favorite_product(request, product_slug):
@@ -117,15 +121,6 @@ def add_favorite_product(request, product_slug):
     else:
         messages.warning(request, 'Войдите или зарегистрируйтесь что бы добавить в Избранное')
         return redirect('registration')
-
-
-class AboutView(TemplateView):
-    template_name = 'store/about.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'О нас'
-        return context
 
 
 def registration(request):
@@ -149,23 +144,15 @@ def registrate_user(request):
     return redirect('registration')
 
 
-def contact_us(request):
-    context = {
-        'title': 'Контакты',
-        'contact_user_form': ContactUserForm(),
-    }
-    return render(request, 'store/contact_us.html', context=context)
+class ContactUsView(FormView):
+    template_name = 'store/contact_us.html'
+    form_class = ContactUserForm
+    extra_context = {'title': 'Контакты'}
 
-
-def saving_user_contacts(request):
-    if request.method == 'POST':
-        form = ContactUserForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Мы получили ваше сообщения, мы ответим вам в течении 1 дня')
-            return redirect('home')
-
-    return redirect('home')
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Мы получили ваше сообщения, мы ответим вам в течении 1 дня')
+        return redirect('home')
 
 
 def login_page(request):

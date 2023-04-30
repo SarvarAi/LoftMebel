@@ -10,24 +10,24 @@
         <section class="contact__section">
             <h1 class="contact__section-title">Свяжитесь с нами</h1>
             <div class="contact__section-content">
-                <form action="{% url 'save_contact' %}" class="contact__section-form" method="POST"
+                <form class="contact__section-form" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="contact__section-inputs">
                         <div class="input__title">
                             <h2>Ваше имя</h2>
-                            {{ contact_user_form.name }}
+                            {{ form.name }}
                         </div>
                         <div class="input__title">
                             <h2>Ваш e-mail</h2>
-                            {{ contact_user_form.email }}
+                            {{ form.email }}
                         </div>
                     </div>
                     <h2 class="textarea__title">Сообщение</h2>
-                    {{ contact_user_form.text }}
+                    {{ form.text }}
                     <div class="input__title">
                         <h2>Файл не обязательно прикреплять</h2>
-                        {{ contact_user_form.file }}
+                        {{ form.file }}
                     </div>
                     <div class="contact__section-btns">
                         <button class="btn btns__send" type="submit">Отправить</button>

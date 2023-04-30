@@ -13,7 +13,7 @@
         <div class="list__drop">
             <ul>
                 {% for color_parameters in topic_product.colors.all %}
-                <li style="margin-top:5px;"><a href="{% url 'product_color' topic_product.slug color_parameters.slug %}">
+                <li style="margin-top:5px;"><a href="{% url 'product' topic_product.slug color_parameters.slug %}">
                     <div style="width: 30px;
                                 height: 30px;
                                 background: {{ color_parameters.color_code }};
@@ -33,7 +33,7 @@
         <div class="list__drop">
             <ul>
                 {% for color_parameters in topic_product.colors.all %}
-                <li style="margin-top:5px;"><a href="{% url 'product_color' topic_product.slug color_parameters.slug %}">
+                <li style="margin-top:5px;"><a href="{% url 'product' topic_product.slug color_parameters.slug %}">
                     <div style="width: 30px;
                                 height: 30px;
                                 background: {{ color_parameters.color_code }};
