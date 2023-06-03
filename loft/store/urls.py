@@ -3,7 +3,11 @@ import profile
 from django.contrib.auth import logout
 from django.urls import path
 
-from .views import *
+from .views import HomeView, AboutView, ContactUsView, SearchHomeView, CategoryView, \
+    registration, registrate_user, ProductDetailView, user_login, login_page, profile_page, \
+    user_logout, change_password_page, changing_password, add_favorite_product, favorites, \
+    get_cart_information, edit_profile_account, cart_operation, delete_order_product, \
+    checkout, create_checkout_session, success_payment, ShippingView, saving_shipping_address
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
